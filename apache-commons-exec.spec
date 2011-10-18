@@ -26,9 +26,9 @@ BuildRequires:  maven-plugin-bundle
 BuildRequires:  maven-resources-plugin
 BuildRequires:  maven-release-plugin
 Requires:       java >= 0:1.6.0
-Requires:       jpackage-utils
-Requires(post): jpackage-utils
-Requires(postun):jpackage-utils
+Requires:       jpackage-utils >= 0:1.7.5
+Requires(post): jpackage-utils >= 0:1.7.5
+Requires(postun):jpackage-utils >= 0:1.7.5
 BuildArch:      noarch
 
 %description
@@ -40,7 +40,7 @@ environment management in Java.
 Summary:        Javadocs for %{name}
 Group:          Development/Java
 Requires:       %{name} = %{version}-%{release}
-Requires:       jpackage-utils
+Requires:       jpackage-utils >= 0:1.7.5
 
 %description javadoc
 This package contains the API documentation for %{name}.
