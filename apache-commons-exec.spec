@@ -3,7 +3,7 @@
 
 Name:           apache-commons-exec
 Version:        1.1
-Release:        4
+Release:        5
 Summary:        Java library to reliably execute external processes from within the JVM
 
 Group:          Development/Java
