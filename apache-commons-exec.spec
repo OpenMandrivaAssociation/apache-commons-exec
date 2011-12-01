@@ -63,23 +63,23 @@ mvn-jpp \
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
-mkdir -p $RPM_BUILD_ROOT%{_javadir}
-cp -p target/%{short_name}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}
-ln -s %{short_name}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{short_name}.jar
+mkdir -p %{buildroot}%{_javadir}
+cp -p target/%{short_name}-%{version}.jar %{buildroot}%{_javadir}
+ln -s %{short_name}-%{version}.jar %{buildroot}%{_javadir}/%{short_name}.jar
 
-mkdir -p $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-cp -rp target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+mkdir -p %{buildroot}%{_javadocdir}/%{name}
+cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/maven2/poms
-cp -p pom.xml $RPM_BUILD_ROOT/%{_datadir}/maven2/poms/JPP-%{name}.pom
+mkdir -p %{buildroot}%{_datadir}/maven2/poms
+cp -p pom.xml %{buildroot}/%{_datadir}/maven2/poms/JPP-%{name}.pom
 
 %add_to_maven_depmap org.apache.maven %{name} %{version} JPP %{name}
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
