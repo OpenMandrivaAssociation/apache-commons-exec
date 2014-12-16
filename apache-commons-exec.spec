@@ -3,11 +3,10 @@
 %global short_name commons-%{base_name}
 
 Name:           apache-commons-exec
-Version:        1.1
-Release:        11.0%{?dist}
+Version:        1.3
+Release:        1.1
 Summary:        Java library to reliably execute external processes from within the JVM
-
-
+Group:          Development/Java
 License:        ASL 2.0
 URL:            http://commons.apache.org/exec/
 Source0:        http://www.apache.org/dist/commons/%{base_name}/source/%{short_name}-%{version}-src.tar.gz
@@ -18,7 +17,7 @@ BuildRequires:  jpackage-utils
 BuildRequires:  maven-local
 BuildRequires:  maven-install-plugin
 BuildRequires:  maven-invoker-plugin
-Requires:       java >= 1:1.6.0
+Requires:       java-headless >= 1:1.6.0
 Requires:       jpackage-utils
 BuildArch:      noarch
 
@@ -29,7 +28,7 @@ environment management in Java.
 
 %package javadoc
 Summary:        Javadocs for %{name}
-
+Group:          Documentation
 Requires:       jpackage-utils
 
 %description javadoc
@@ -39,41 +38,50 @@ This package contains the API documentation for %{name}.
 %prep
 %setup -q -n %{short_name}-%{version}-src
 
+# Fix wrong end-of-line encoding
+for file in LICENSE.txt NOTICE.txt RELEASE-NOTES.txt STATUS; do
+  sed -i.orig "s/\r//" $file && \
+  touch -r $file.orig $file && \
+  rm $file.orig
+done
+
 # Shell scripts used for unit tests must be executable (see
 # http://commons.apache.org/exec/faq.html#environment-testing)
 chmod a+x src/test/scripts/*.sh
 
+%mvn_file :%{short_name} %{short_name} %{name}
+
 
 %build
-mvn-rpmbuild install javadoc:aggregate
+%mvn_build 
 
 
 %install
-mkdir -p $RPM_BUILD_ROOT%{_javadir}
-cp -p target/%{short_name}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}.jar
-ln -s %{name}.jar $RPM_BUILD_ROOT%{_javadir}/%{short_name}.jar
-
-mkdir -p $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-cp -rp target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-
-mkdir -p $RPM_BUILD_ROOT%{_mavenpomdir}
-cp -p pom.xml $RPM_BUILD_ROOT/%{_mavenpomdir}/JPP-%{name}.pom
-
-%add_maven_depmap JPP-%{name}.pom %{name}.jar
+%mvn_install
 
 
-%files
-%doc LICENSE.txt NOTICE.txt STATUS
-%{_mavenpomdir}/*
-%{_javadir}/*.jar
-%{_mavendepmapfragdir}/*
+%files -f .mfiles
+%doc LICENSE.txt NOTICE.txt STATUS RELEASE-NOTES.txt
 
-%files javadoc
+
+%files javadoc -f .mfiles-javadoc
 %doc LICENSE.txt NOTICE.txt
-%{_javadocdir}/%{name}
 
 
 %changelog
+* Tue Dec 02 2014 Mohamed El Morabity <melmorabity@fedoraproject.org> - 1.3-1
+- Update to 1.3
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.2-2
+- Use Requires: java-headless rebuild (#1067528)
+
+* Mon Feb 03 2014 Mohamed El Morabity <melmorabity@fedoraproject.org> - 1.2-1
+- Update to 1.2
+- Adapt to current guidelines
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -123,3 +131,4 @@ cp -p pom.xml $RPM_BUILD_ROOT/%{_mavenpomdir}/JPP-%{name}.pom
 
 * Mon Jan 18 2010 ELMORABITY Mohamed <melmorabity@fedoraproject.org> 1.0.1-1
 - Initial RPM release
+
