@@ -8,7 +8,7 @@ Release:        1.3
 Summary:        Java library to reliably execute external processes from within the JVM
 Group:          Development/Java
 License:        ASL 2.0
-URL:            http://commons.apache.org/exec/
+URL:            https://commons.apache.org/exec/
 Source0:        http://www.apache.org/dist/commons/%{base_name}/source/%{short_name}-%{version}-src.tar.gz
 
 BuildRequires:  iputils
